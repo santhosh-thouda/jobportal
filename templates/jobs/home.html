@@ -1,0 +1,488 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Welcome to JobFly{% endblock %}
+
+{% block content %}
+<main>
+    <style>
+        /* Hero Section Styling */
+        .hero-section {
+            background: linear-gradient(120deg, #4f46e5, #9333ea);
+            color: white;
+            padding: 4rem 1rem 6rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-section h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            line-height: 2;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-section h1 span {
+            background: linear-gradient(90deg, #ff6b6b, #fbc531);
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-section p {
+            font-size: 1rem;
+            color: white;
+            margin-bottom: 2rem;
+        }
+
+        /* Compact Search Bar */
+        .search-bar {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 30px;
+            padding: 0.5rem 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            align-items:left;
+            width: 60%;
+            margin-left: 20%;
+            
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 0.6rem 1rem;
+            border-radius: 20px;
+            border: none;
+            outline: none;
+            font-size: 0.9rem;
+            color: #111827;
+        }
+
+        .search-bar input::placeholder {
+            color: #6b7280;
+            font-weight: 400;
+            font-family: 'Inter', sans-serif;
+            text-align: center;
+        }
+
+        .search-bar button {
+            padding: 0.6rem 1.5rem;
+            background-color: #2563eb;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: bold;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar button:hover {
+            background-color: #1e40af;
+            transform: scale(1.05);
+        }
+
+        /* Image Animations */
+        .image-row {
+            margin-top: 3rem;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .image-row img {
+            width: 8rem;
+            height: 8rem;
+            border-radius: 0.75rem;
+            object-fit: cover;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .image-row img:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Decorative Background */
+        .circle-bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 40rem;
+            height: 40rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+        }
+
+        /* Chatbot Styles */
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .chatbot-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            color: white;
+            font-size: 24px;
+        }
+
+        .chatbot-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .chatbot-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 350px;
+            height: 500px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chatbot-window.active {
+            display: flex;
+        }
+
+        .chatbot-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chatbot-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .chatbot-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.3s ease;
+        }
+
+        .chatbot-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            background: #f8f9fa;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-content {
+            max-width: 75%;
+            padding: 0.75rem 1rem;
+            border-radius: 18px;
+            word-wrap: break-word;
+        }
+
+        .message.bot .message-content {
+            background: white;
+            color: #333;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .chatbot-input-container {
+            padding: 1rem;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chatbot-input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            outline: none;
+            font-size: 0.9rem;
+        }
+
+        .chatbot-input:focus {
+            border-color: #667eea;
+        }
+
+        .chatbot-send {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s ease;
+        }
+
+        .chatbot-send:hover {
+            transform: scale(1.05);
+        }
+
+        .chatbot-send:active {
+            transform: scale(0.95);
+        }
+
+        /* Add these media queries to your existing search-bar styles */
+        @media (max-width: 768px) {
+            .search-bar {
+                flex-direction: column;
+                width: 90%;
+                margin-left: 5%;
+                padding: 1rem;
+            }
+
+            .search-bar input {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+
+            .image-row {
+                flex-wrap: wrap;
+            }
+
+            .image-row img {
+                width: 6rem;
+                height: 6rem;
+            }
+
+            .chatbot-window {
+                width: 90vw;
+                right: 5vw;
+            }
+        }
+    </style>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="circle-bg"></div>
+        <div class="container">
+            <!-- Main Heading -->
+            <h1>
+                Discover Your <span>Dream Job</span> with <span>Ease</span>
+            </h1>
+            <p>
+                Search through thousands of job opportunities and land the perfect role for your career.
+            </p>
+
+            <!-- Search Bar -->
+            <form method="GET" action="{% url 'jobs:job_list' %}" class="search-bar">
+                <input type="text" name="search" placeholder="Job title or keyword" required>
+                <input type="text" name="location" placeholder="Location" required>
+                <button type="submit">Search</button>
+            </form>
+
+            <!-- Images with Hover Animation -->
+            <div class="image-row">
+                <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=400&h=400&fit=crop" alt="Job Search">
+                <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=400&h=400&fit=crop" alt="Career Growth">
+                <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&h=400&fit=crop" alt="Job Opportunities">
+            </div>
+            
+        </div>
+    </section>
+
+    <!-- Additional Sections -->
+    {% include 'jobs/sections/featured_jobs.html' %}
+    {% include 'jobs/sections/categories.html' %}
+    {% include 'jobs/sections/how_it_works.html' %}
+
+    <!-- AI Chatbot -->
+    <div class="chatbot-container">
+        <div class="chatbot-window" id="chatbotWindow">
+            <div class="chatbot-header">
+                <h3>🤖 JobFly Assistant</h3>
+                <button class="chatbot-close" id="chatbotClose">&times;</button>
+            </div>
+            <div class="chatbot-messages" id="chatbotMessages">
+                <div class="message bot">
+                    <div class="message-content">
+                        Hello! I'm your JobFly AI assistant. How can I help you find your dream job today?
+                    </div>
+                </div>
+            </div>
+            <div class="chatbot-input-container">
+                <input type="text" class="chatbot-input" id="chatbotInput" placeholder="Type your message...">
+                <button class="chatbot-send" id="chatbotSend">Send</button>
+            </div>
+        </div>
+        <button class="chatbot-button" id="chatbotButton">💬</button>
+    </div>
+</main>
+
+<script>
+    // Chatbot functionality
+    const chatbotButton = document.getElementById('chatbotButton');
+    const chatbotWindow = document.getElementById('chatbotWindow');
+    const chatbotClose = document.getElementById('chatbotClose');
+    const chatbotInput = document.getElementById('chatbotInput');
+    const chatbotSend = document.getElementById('chatbotSend');
+    const chatbotMessages = document.getElementById('chatbotMessages');
+
+    // Toggle chatbot window
+    chatbotButton.addEventListener('click', () => {
+        chatbotWindow.classList.toggle('active');
+    });
+
+    chatbotClose.addEventListener('click', () => {
+        chatbotWindow.classList.remove('active');
+    });
+
+    // AI responses based on keywords
+    function getAIResponse(userMessage) {
+        const message = userMessage.toLowerCase();
+        
+        // Greetings
+        if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
+            return "Hello! I'm here to help you with your job search. What would you like to know?";
+        }
+        
+        // Job search related
+        if (message.includes('search') || message.includes('find job') || message.includes('job')) {
+            return "You can search for jobs using the search bar at the top of the page. Enter a job title or keyword and location to find relevant opportunities!";
+        }
+        
+        // Application related
+        if (message.includes('apply') || message.includes('application') || message.includes('how to apply')) {
+            return "To apply for a job, browse through the job listings, click on a job that interests you, and you'll see an 'Apply Now' button on the job details page.";
+        }
+        
+        // Resume related
+        if (message.includes('resume') || message.includes('cv')) {
+            return "Make sure your resume is up-to-date and highlights your relevant skills and experience. Tailor it to match the job description for better results!";
+        }
+        
+        // Skills related
+        if (message.includes('skill') || message.includes('qualification')) {
+            return "Different jobs require different skills. Check the job description for specific requirements. Common skills include communication, problem-solving, and technical expertise relevant to the role.";
+        }
+        
+        // Location related
+        if (message.includes('location') || message.includes('where')) {
+            return "You can search for jobs by location using the search bar. Enter your preferred city or region to find jobs in that area.";
+        }
+        
+        // Salary related
+        if (message.includes('salary') || message.includes('pay') || message.includes('wage')) {
+            return "Salary information is usually provided in the job description. Check the details of each job posting to see the compensation package.";
+        }
+        
+        // Help related
+        if (message.includes('help') || message.includes('support')) {
+            return "I'm here to help! You can ask me about searching for jobs, applying, resume tips, or any other job-related questions.";
+        }
+        
+        // Default responses
+        const defaultResponses = [
+            "That's an interesting question! Could you provide more details? I can help you with job searching, applications, resume tips, and more.",
+            "I understand you're looking for information. Try asking about job search, applications, or career advice!",
+            "I'm here to assist with your job search journey. Feel free to ask about finding jobs, applying, or any career-related questions!",
+            "Great question! I can help you navigate our job portal. What specific information are you looking for?"
+        ];
+        
+        return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
+    }
+
+    // Add message to chat
+    function addMessage(text, isUser) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+        
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'message-content';
+        contentDiv.textContent = text;
+        
+        messageDiv.appendChild(contentDiv);
+        chatbotMessages.appendChild(messageDiv);
+        
+        // Scroll to bottom
+        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+    }
+
+    // Send message
+    function sendMessage() {
+        const message = chatbotInput.value.trim();
+        if (message === '') return;
+        
+        // Add user message
+        addMessage(message, true);
+        chatbotInput.value = '';
+        
+        // Simulate AI thinking delay
+        setTimeout(() => {
+            const response = getAIResponse(message);
+            addMessage(response, false);
+        }, 500);
+    }
+
+    // Event listeners
+    chatbotSend.addEventListener('click', sendMessage);
+    
+    chatbotInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+</script>
+{% endblock %}

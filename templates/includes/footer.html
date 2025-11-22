@@ -1,0 +1,139 @@
+{% load static %}
+<footer class="bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white mt-auto relative">
+    <!-- Decorative Top Border -->
+    <div class="h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <!-- Job Seekers -->
+            <div class="space-y-6">
+                <h3 class="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">
+                    For Job Seekers
+                </h3>
+                <ul class="space-y-4">
+                    <li>
+                        <a href="{% url 'jobs:job_list' %}" class="text-gray-300 hover:text-white hover:translate-x-1 transition-all duration-300 flex items-center">
+                            <span class="mr-2">→</span>Browse Jobs
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'jobs:categories' %}" class="text-gray-300 hover:text-white hover:translate-x-1 transition-all duration-300 flex items-center">
+                            <span class="mr-2">→</span>Categories
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'jobs:companies' %}" class="text-gray-300 hover:text-white hover:translate-x-1 transition-all duration-300 flex items-center">
+                            <span class="mr-2">→</span>Companies
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Employers -->
+            <div class="space-y-6">
+                <h3 class="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
+                    For Employers
+                </h3>
+                <ul class="space-y-4">
+                    <li>
+                        {% if user.is_authenticated and not user.is_employer %}
+                            <a href="#" onclick="showAccessDenied(event); return false;" class="text-gray-300 hover:text-white hover:translate-x-1 transition-all duration-300 flex items-center cursor-pointer">
+                                <span class="mr-2">→</span>Post a Job
+                            </a>
+                        {% elif not user.is_authenticated %}
+                            <a href="#" onclick="showAccessDenied(event); return false;" class="text-gray-300 hover:text-white hover:translate-x-1 transition-all duration-300 flex items-center cursor-pointer">
+                                <span class="mr-2">→</span>Post a Job
+                            </a>
+                        {% else %}
+                            <a href="{% url 'jobs:post_job' %}" class="text-gray-300 hover:text-white hover:translate-x-1 transition-all duration-300 flex items-center">
+                                <span class="mr-2">→</span>Post a Job
+                            </a>
+                        {% endif %}
+                    </li>
+                    <li>
+                        <a href="{% url 'dashboard:employer_dashboard' %}" class="text-gray-300 hover:text-white hover:translate-x-1 transition-all duration-300 flex items-center">
+                            <span class="mr-2">→</span>Employer Dashboard
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Quick Links & Social -->
+            <div class="space-y-6">
+                <h3 class="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
+                    Connect With Us
+                </h3>
+                <!-- Social Links -->
+                <div class="flex space-x-4">
+                    <a href="#" class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center hover:scale-110 transition-transform duration-300">
+                        <i class="fab fa-facebook-f text-white"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center hover:scale-110 transition-transform duration-300">
+                        <i class="fab fa-linkedin-in text-white"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-pink-600 flex items-center justify-center hover:scale-110 transition-transform duration-300">
+                        <i class="fab fa-instagram text-white"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-400 to-blue-500 flex items-center justify-center hover:scale-110 transition-transform duration-300">
+                        <i class="fab fa-twitter text-white"></i>
+                    </a>
+                </div>
+                <!-- Quick Links -->
+                <ul class="space-y-4">
+                    <li>
+                        <a href="#" class="text-gray-300 hover:text-white hover:translate-x-1 transition-all duration-300 flex items-center">
+                            <span class="mr-2">→</span>Terms of Service
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="text-gray-300 hover:text-white hover:translate-x-1 transition-all duration-300 flex items-center">
+                            <span class="mr-2">→</span>Privacy Policy
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="mt-16 pt-8 border-t border-gray-700">
+            <p class="text-center text-gray-400 text-sm">
+                © {% now "Y" %} JobPortal. All rights reserved.
+            </p>
+        </div>
+    </div>
+
+    <!-- Access Denied Notification -->
+    <div id="accessDeniedNotification" class="hidden fixed top-4 right-4 bg-red-600 text-white px-6 py-4 rounded-lg shadow-2xl z-50 flex items-center gap-3 max-w-md">
+        <div class="flex-shrink-0">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+        </div>
+        <div class="flex-1">
+            <p class="font-semibold">Access Denied</p>
+        </div>
+        <button onclick="closeAccessDenied()" class="flex-shrink-0 text-white hover:text-red-200 transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+    </div>
+</footer>
+
+<script>
+    function showAccessDenied(event) {
+        event.preventDefault();
+        const notification = document.getElementById('accessDeniedNotification');
+        notification.classList.remove('hidden');
+        
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+            closeAccessDenied();
+        }, 5000);
+    }
+
+    function closeAccessDenied() {
+        const notification = document.getElementById('accessDeniedNotification');
+        notification.classList.add('hidden');
+    }
+</script>
